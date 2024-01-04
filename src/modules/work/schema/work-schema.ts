@@ -18,7 +18,7 @@ export interface Work {
   skills?: Skill,
   reviews?: Array<Reviews>;
   desc: string,
-  questions: [{ quetion: string, answer: string }],
+  questions: [{ question: string, answer: string }],
   requirements: string,
   gallery: [string],
   files: [string]
