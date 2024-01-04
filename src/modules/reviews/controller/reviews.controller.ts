@@ -43,8 +43,8 @@ class ReviewsController {
 
       const reviews = await new reviewModel({
         title: req.body.title,
-        from_to: from_user,
-        user: to_user,
+        from_to: from_user._id,
+        user: to_user._id,
       }).save();
 
       to_user.reviews?.push(reviews);
