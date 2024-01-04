@@ -15,19 +15,25 @@ export interface Work {
   user?: User;
   categories?: Categories;
   sub_categories?: SubCategories;
-  skills?: Skill,
+  skills?: Skill;
   reviews?: Array<Reviews>;
-  desc: string,
-  questions: [{ question: string, answer: string }],
-  requirements: string,
-  gallery: [string],
-  files: [string]
+  desc?: string;
+  questions?: [{ question: string; answer: string }];
+  requirements?: string;
+  gallery?: [string];
+  files?: [string];
 }
 
 export const workSchema = new Schema({
   title: String,
   caption: String,
   image: String,
+  desc: String,
+  questions: Array,
+  requirements: String,
+  gallery: Array,
+  files: Array,
+  sum: Number,
   offers_count: {
     type: Number,
     default: 0,
@@ -36,8 +42,9 @@ export const workSchema = new Schema({
     type: Number,
     default: 0,
   },
-  sum: Number,
   user: { type: Schema.Types.ObjectId, ref: "users" },
   categories: { type: Schema.Types.ObjectId, ref: "categories" },
+  sub_categories: { type: Schema.Types.ObjectId, ref: "sub_categories" },
+  skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
   reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
 });
