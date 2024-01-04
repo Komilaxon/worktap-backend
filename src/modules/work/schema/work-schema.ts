@@ -2,6 +2,8 @@ import { Schema, Types } from "mongoose";
 import { Categories } from "../../categories/schemas/categories-schema";
 import { User } from "../../user/schema/user-schema";
 import { Reviews } from "../../reviews/schema/reviews.schema";
+import { SubCategories } from "../../subcategories/schema/subcategories.schema";
+import { Skill } from "../../skills/schema/skills-schema";
 
 export interface Work {
   title: string;
@@ -12,7 +14,14 @@ export interface Work {
   rating: any;
   user?: User;
   categories?: Categories;
+  sub_categories?: SubCategories;
+  skills?: Skill,
   reviews?: Array<Reviews>;
+  desc: string,
+  questions: [{ quetion: string, answer: string }],
+  requirements: string,
+  gallery: [string],
+  files: [string]
 }
 
 export const workSchema = new Schema({
