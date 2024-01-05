@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { Request, Response, NextFunction } from "express";
 import { workModel } from "../models/work-model.js";
 import { userModel } from "../../user/model/user-model.js";
@@ -146,6 +148,20 @@ class WorkController {
         user: user,
       }).populate("categories");
 
+      if (works) {
+        const { filename }: any = req.file;
+
+        fs.unlinkSync(path.join(path.resolve(), "uploads", filename));
+
+        (error.message = "User image is already exist"),
+          (error.code = 400),
+          next(error);
+      } else {
+        error.message = "File information is missing";
+        error.code = 400;
+        next(error);
+      }
+
       await works.save();
 
       res.status(201).json({ msg: "CREATED", data: works, error: false });
@@ -171,9 +187,11 @@ class WorkController {
       res.status(200).json({ msg: "UPDATED", data: work, error: false });
     } catch (error: any) {
       error.code = 500;
-      next(500);
+      next(error);
     }
   }
+
+  // qayta ko'rib chiqish kk
 
   async upDateOfferCount(req: Request, res: Response, next: NextFunction) {
     try {
@@ -183,7 +201,6 @@ class WorkController {
       const { id } = req.params;
       const { rating } = req.body;
 
-      // Find the work document
       const work = await workModel.findOne({ _id: id });
 
       if (!work) {

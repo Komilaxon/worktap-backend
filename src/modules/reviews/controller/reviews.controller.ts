@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { reviewModel } from "../models/reviews.model";
-import { Types } from "mongoose";
 import { userModel } from "../../user/model/user-model";
 import { workModel } from "../../work/models/work-model";
 
@@ -63,11 +62,10 @@ class ReviewsController {
       const { id } = req.params;
       const { userId } = req.body;
       const work = await workModel.findOne({ _id: id });
-      console.log(work);
-
-      const error: any = new Error();
+      const from_user = await userModel.findOne({ _id: userId });
 
       if (!work) {
+        const error: any = new Error();
         error.message = "Work is not found";
         error.code = 404;
         next(error);
@@ -76,8 +74,8 @@ class ReviewsController {
 
       const reviews = await new reviewModel({
         title: req.body.title,
-        from_to: userId,
-        work: work,
+        from_to: from_user?._id,
+        work: work._id,
       }).save();
 
       work.reviews?.push(reviews);

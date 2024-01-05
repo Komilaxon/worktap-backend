@@ -2,6 +2,7 @@ import { Schema, Types } from "mongoose";
 import { Skill } from "../../skills/schema/skills-schema.js";
 import { Categories } from "../../categories/schemas/categories-schema.js";
 import { Reviews } from "../../reviews/schema/reviews.schema.js";
+import { SubCategories } from "../../subcategories/schema/subcategories.schema.js";
 
 export interface User {
   fullname: string;
@@ -13,13 +14,15 @@ export interface User {
   image: string;
   info: string;
   region: string;
+  role: string;
   in_site: Date | string;
-  study: string;
+  study: [string];
   rating: number;
-  sertificate: string;
-  language: string;
+  sertificate: [string];
+  language: [string];
   categories: Categories;
-  skills: Array<Skill>;
+  subcategories: SubCategories;
+  skills: Skill;
   reviews: Array<Reviews>;
 }
 
@@ -66,23 +69,28 @@ export const userSchema = new Schema<User>({
     default: Date.now(),
   },
   study: {
-    type: String,
+    type: [String],
     default: null,
   },
   rating: {
     type: Number,
     default: null,
   },
-  sertificate: {
+  role: {
     type: String,
+    required: true,
+  },
+  sertificate: {
+    type: [String],
     default: null,
   },
   language: {
-    type: String,
+    type: [String],
     default: null,
   },
 
+  subcategories: { type: Schema.Types.ObjectId, ref: "sub_categories" },
   categories: { type: Schema.Types.ObjectId, ref: "categories" },
-  skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
+  skills: { type: Schema.Types.ObjectId, ref: "skills" },
   reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
 });

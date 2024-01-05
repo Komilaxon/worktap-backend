@@ -7,9 +7,10 @@ export const usersRouter: Router = Router();
 
 usersRouter.get("/users", userController.getUser);
 usersRouter.get("/getme", authMiddle.checkToken, userController.getMe);
+
 usersRouter.put(
   "/users/:id",
   authMiddle.checkToken,
   upload.single("image"),
-  userController.upDateUser
+  userController.updateUser
 );

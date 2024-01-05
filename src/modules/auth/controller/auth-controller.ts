@@ -39,13 +39,14 @@ class AuthController {
     try {
       req.body.password = bcryptHook.hashSync(req.body.password, saltOrRounds);
 
-      const { fullname, password, email, lastname, phone } = req.body;
+      const { fullname, password, email, lastname, phone, role } = req.body;
       const user = await userModel.create({
         fullname,
         email,
         password,
         lastname,
         phone,
+        role,
       });
 
       const TOKEN = jwt.sign({ id: user._id, isAdmin: user.isAdmin });
@@ -53,7 +54,6 @@ class AuthController {
       res.status(201).json({ msg: "CREATED", data: TOKEN, error: false });
     } catch (error: any) {
       if (error instanceof mongo.MongoServerError) {
-        const error: any = new Error();
         error.message = "User is already exist";
         error.code = 409;
         next(error);
