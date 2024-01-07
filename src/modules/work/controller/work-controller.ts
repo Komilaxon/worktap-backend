@@ -178,6 +178,7 @@ class WorkController {
           })
           user.works?.push(works);
           await user.save();
+          await works.save()
           res.status(201).json({ msg: "CREATED", data: works, error: false });
         }
       } else {
