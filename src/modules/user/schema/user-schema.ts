@@ -3,6 +3,8 @@ import { Skill } from "../../skills/schema/skills-schema.js";
 import { Categories } from "../../categories/schemas/categories-schema.js";
 import { Reviews } from "../../reviews/schema/reviews.schema.js";
 import { SubCategories } from "../../subcategories/schema/subcategories.schema.js";
+import { Order } from "../../order/schema/order.schema.js";
+import { Work } from "../../work/schema/work-schema.js";
 
 export interface User {
   fullname: string;
@@ -24,6 +26,8 @@ export interface User {
   subcategories: SubCategories;
   skills: Skill;
   reviews: Array<Reviews>;
+  orders: Array<Order>;
+  works: Array<Work>;
 }
 
 export const userSchema = new Schema<User>({
@@ -88,7 +92,8 @@ export const userSchema = new Schema<User>({
     type: [String],
     default: null,
   },
-
+  works: [{ type: Schema.Types.ObjectId, ref: "works" }],
+  orders: [{ type: Schema.Types.ObjectId, ref: "orders" }],
   subcategories: { type: Schema.Types.ObjectId, ref: "sub_categories" },
   categories: { type: Schema.Types.ObjectId, ref: "categories" },
   skills: { type: Schema.Types.ObjectId, ref: "skills" },

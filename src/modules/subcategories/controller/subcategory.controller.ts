@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { categoryModel } from "../../categories/models/categories-model.js";
 import { subCategoryModel } from "../models/subcategory.model.js";
+import { handleNotFound } from "../../../utils/error.handler.js";
 
 class SubCategoriesController {
   async getSubCategories(req: Request, res: Response, next: NextFunction) {
@@ -24,9 +25,7 @@ class SubCategoriesController {
       const error: any = new Error();
 
       if (!category) {
-        error.message = "Not found";
-        error.code = 404;
-        next(error);
+        handleNotFound(error, "Category is not found", 404, next);
         return;
       }
       const subCategories = await new subCategoryModel({

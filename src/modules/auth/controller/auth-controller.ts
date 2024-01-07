@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { userModel } from "../../user/model/user-model.js";
 import bcryptHook from "../../../utils/bcrypt-hook.js";
 import { saltOrRounds } from "../../../utils/constants.js";
+import { handleNotFound } from "../../../utils/error.handler.js";
 
 class AuthController {
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -17,9 +18,7 @@ class AuthController {
       const error: any = new Error();
 
       if (!user || !comparedPass) {
-        error.message = "User is not found";
-        error.code = 404;
-        next(error);
+        handleNotFound(error, "User is not found", 404, next);
         return;
       }
       const TOKEN = jwt.sign({ id: user._id, isAdmin: user.isAdmin });

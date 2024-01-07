@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { reviewModel } from "../models/reviews.model";
 import { userModel } from "../../user/model/user-model";
 import { workModel } from "../../work/models/work-model";
+import { handleNotFound } from "../../../utils/error.handler";
 
 class ReviewsController {
   async getUserReviews(req: Request, res: Response, next: NextFunction) {
@@ -34,9 +35,7 @@ class ReviewsController {
       const error: any = new Error();
 
       if (!to_user || !from_user) {
-        error.message = "User is not found";
-        error.code = 404;
-        next(error);
+        handleNotFound(error, "User is not found", 404, next);
         return;
       }
 
@@ -63,12 +62,10 @@ class ReviewsController {
       const { userId } = req.body;
       const work = await workModel.findOne({ _id: id });
       const from_user = await userModel.findOne({ _id: userId });
+      const error: any = new Error();
 
       if (!work) {
-        const error: any = new Error();
-        error.message = "Work is not found";
-        error.code = 404;
-        next(error);
+        handleNotFound(error, "Work is not found", 404, next);
         return;
       }
 

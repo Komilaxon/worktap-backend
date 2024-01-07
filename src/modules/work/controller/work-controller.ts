@@ -4,6 +4,9 @@ import { Request, Response, NextFunction } from "express";
 import { workModel } from "../models/work-model.js";
 import { userModel } from "../../user/model/user-model.js";
 import { categoryModel } from "../../categories/models/categories-model.js";
+import { subCategoryModel } from "../../subcategories/models/subcategory.model.js";
+import { skillsModel } from "../../skills/model/skills-model.js";
+import { handleNotFound } from "../../../utils/error.handler.js";
 
 class WorkController {
   async getWork(
@@ -44,9 +47,7 @@ class WorkController {
 
       const error: any = new Error();
       if (!results) {
-        error.message = "Works are not found";
-        error.code = 404;
-        next(error);
+        handleNotFound(error, "work is not found", 404, next);
         return;
       }
 
@@ -125,46 +126,55 @@ class WorkController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const { categories } = req.body;
+      const { categories, sub_categories, skills } = req.body;
 
-      const findCategory = await categoryModel.findOne({ _id: categories });
       const user = await userModel.findOne({ _id: id });
-
+      const findCategory = await categoryModel.findOne({ _id: categories });
+      const findedSubCategory = await subCategoryModel.findOne({
+        _id: sub_categories,
+      });
+      const findedSkills = await skillsModel.findOne({ _id: skills });
       const error: any = new Error();
 
-      if (!user) {
-        error.message = "Not found";
-        error.code = 404;
-        next(error);
+      if (!user || !findCategory || !findedSubCategory || !skills) {
+        handleNotFound(error, "Not found", 404, next);
         return;
       }
+
       const works = await new workModel({
         image: req.file?.filename,
+        files: req.file?.filename,
         title: req.body.title,
         caption: req.body.caption,
         sum: req.body.sum,
         rating: req.body.rating,
-        categories: findCategory,
-        user: user,
-      }).populate("categories");
+        questions: req.body.questions,
+        categories: findCategory?._id,
+        sub_categories: findedSubCategory?._id,
+        skills: findedSkills?._id,
+        desc: req.body.desc,
+        requirements: req.body.requirements,
+        gallery: req.body.gallery,
+        user: user._id,
+      }).save();
 
-      if (works) {
-        const { filename }: any = req.file;
+      if (req.file) {
+        const { fieldname }: any = req.file;
+        const filePath = path.join(path.resolve(), "uploads", fieldname);
 
-        fs.unlinkSync(path.join(path.resolve(), "uploads", filename));
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+        user.works?.push(works);
+        await user.save();
 
-        (error.message = "User image is already exist"),
-          (error.code = 400),
-          next(error);
+        res.status(201).json({ msg: "CREATED", data: works, error: false });
       } else {
         error.message = "File information is missing";
         error.code = 400;
         next(error);
+        return;
       }
-
-      await works.save();
-
-      res.status(201).json({ msg: "CREATED", data: works, error: false });
     } catch (error: any) {
       error.code = 500;
       next(error);
@@ -190,7 +200,6 @@ class WorkController {
       next(error);
     }
   }
-
   // qayta ko'rib chiqish kk
 
   async upDateOfferCount(req: Request, res: Response, next: NextFunction) {

@@ -28,7 +28,7 @@ class AuthMiddle {
         next(error);
         return;
       }
-      
+
       next();
     } catch (error: any) {
       error.code = 500;

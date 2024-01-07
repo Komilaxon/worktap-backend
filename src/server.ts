@@ -10,6 +10,8 @@ import { skillsRouter } from "./modules/skills/router/skills-router.js";
 import { worksRouter } from "./modules/work/router/work-router.js";
 import { subCategoriesRouter } from "./modules/subcategories/router/subcategory.router.js";
 import { reviewsRouter } from "./modules/reviews/router/reviews.router.js";
+import { orderRouter } from "./modules/order/router/order.router.js";
+import multer from "multer";
 
 declare global {
   namespace Express {
@@ -44,12 +46,21 @@ export const server = async (): Promise<void> => {
     app.use("/api", skillsRouter);
     app.use("/api", worksRouter);
     app.use("/api", reviewsRouter);
+    app.use("/api", orderRouter);
 
     // Error handling
 
     app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       res.status(error.code).json({ error: error.message });
       next();
+    });
+
+    app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+      if (error instanceof multer.MulterError) {
+        res.status(400).json({ error: "File size limit exceeded" });
+      } else {
+        next(error);
+      }
     });
 
     app.use(express.static(path.join(path.resolve(), "uploads")));

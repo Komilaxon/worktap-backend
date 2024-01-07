@@ -13,7 +13,10 @@ worksRouter.get("/works/by_sum", workController.getWorkBySum);
 worksRouter.post(
   "/works/:id",
   authMiddle.checkToken,
-  upload.single("image"),
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "files", maxCount: 5 },
+  ]),
   workController.createWork
 );
 

@@ -24,7 +24,7 @@ export interface Work {
   files?: [string];
 }
 
-export const workSchema = new Schema({
+export const workSchema = new Schema<Work>({
   title: String,
   caption: String,
   image: String,
@@ -45,6 +45,6 @@ export const workSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "users" },
   categories: { type: Schema.Types.ObjectId, ref: "categories" },
   sub_categories: { type: Schema.Types.ObjectId, ref: "sub_categories" },
-  skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
+  skills: { type: Schema.Types.ObjectId, ref: "skills" },
   reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
 });

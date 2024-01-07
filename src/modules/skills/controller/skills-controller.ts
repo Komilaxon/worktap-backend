@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { skillsModel } from "../model/skills-model.js";
 import { subCategoryModel } from "../../subcategories/models/subcategory.model.js";
+import { handleNotFound } from "../../../utils/error.handler.js";
 
 class SkillsController {
   async getSkills(
@@ -17,7 +18,7 @@ class SkillsController {
       next(error);
     }
   }
-  
+
   async createSkills(
     req: Request,
     res: Response,
@@ -29,9 +30,7 @@ class SkillsController {
       const error: any = new Error();
 
       if (!category) {
-        error.message = "Not found";
-        error.code = 404;
-        next(error);
+        handleNotFound(error, "Category is not found", 404, next);
         return;
       }
       const skills = await new skillsModel({
