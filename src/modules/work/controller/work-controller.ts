@@ -127,48 +127,59 @@ class WorkController {
     try {
       const { id } = req.params;
       const { categories, sub_categories, skills } = req.body;
-
       const user = await userModel.findOne({ _id: id });
       const findCategory = await categoryModel.findOne({ _id: categories });
       const findedSubCategory = await subCategoryModel.findOne({
         _id: sub_categories,
       });
-      const findedSkills = await skillsModel.findOne({ _id: skills });
       const error: any = new Error();
-
-      if (!user || !findCategory || !findedSubCategory || !skills) {
+      if (!user || !findCategory ||
+        !findedSubCategory || !skills) {
         handleNotFound(error, "Not found", 404, next);
         return;
       }
-
-      const works = await new workModel({
-        image: req.file?.filename,
-        files: req.file?.filename,
-        title: req.body.title,
-        caption: req.body.caption,
-        sum: req.body.sum,
-        rating: req.body.rating,
-        questions: req.body.questions,
-        categories: findCategory?._id,
-        sub_categories: findedSubCategory?._id,
-        skills: findedSkills?._id,
-        desc: req.body.desc,
-        requirements: req.body.requirements,
-        gallery: req.body.gallery,
-        user: user._id,
-      }).save();
-
-      if (req.file) {
-        const { fieldname }: any = req.file;
-        const filePath = path.join(path.resolve(), "uploads", fieldname);
-
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
+      let work_files: string[] = [];
+      let work_images: string[] = []
+      if (Object.entries(req.files as Object).length != 0) {
+        let { images, files }: any = req.files;
+        if (images || files) {
+          if (images) {
+            for (let index = 0; index < images.length; index++) {
+              work_images.push(images[index].filename);
+              const filePath = path.join(path.resolve(), "uploads", images[index].fieldname);
+              if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+              }
+            }
+          }
+          if (files) {
+            for (let index = 0; index < files.length; index++) {
+              work_files.push(files[index].filename);
+              const filePath = path.join(path.resolve(), "uploads", files[index].fieldname);
+              if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+              }
+            }
+          }
+          const works = new workModel({
+            images: work_images,
+            files: work_files,
+            title: req.body.title,
+            caption: req.body.caption,
+            sum: req.body.sum,
+            rating: req.body.rating,
+            questions: req.body.questions,
+            categories: findCategory?._id,
+            sub_categories: findedSubCategory?._id,
+            skills: skills,
+            desc: req.body.desc,
+            requirements: req.body.requirements,
+            user: user._id,
+          })
+          user.works?.push(works);
+          await user.save();
+          res.status(201).json({ msg: "CREATED", data: works, error: false });
         }
-        user.works?.push(works);
-        await user.save();
-
-        res.status(201).json({ msg: "CREATED", data: works, error: false });
       } else {
         error.message = "File information is missing";
         error.code = 400;

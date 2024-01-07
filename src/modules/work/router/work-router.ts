@@ -14,8 +14,8 @@ worksRouter.post(
   "/works/:id",
   authMiddle.checkToken,
   upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "files", maxCount: 5 },
+    { name: "images", maxCount: 10 },
+    { name: "files", maxCount: 10 },
   ]),
   workController.createWork
 );
