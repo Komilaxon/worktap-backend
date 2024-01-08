@@ -133,20 +133,25 @@ class WorkController {
         _id: sub_categories,
       });
       const error: any = new Error();
-      if (!user || !findCategory ||
-        !findedSubCategory || !skills) {
+      if (!user || !findCategory || !findedSubCategory || !skills) {
         handleNotFound(error, "Not found", 404, next);
         return;
       }
+
       let work_files: string[] = [];
-      let work_images: string[] = []
+      let work_images: string[] = [];
       if (Object.entries(req.files as Object).length != 0) {
         let { images, files }: any = req.files;
         if (images || files) {
           if (images) {
             for (let index = 0; index < images.length; index++) {
               work_images.push(images[index].filename);
-              const filePath = path.join(path.resolve(), "uploads", images[index].fieldname);
+
+              const filePath = path.join(
+                path.resolve(),
+                "uploads",
+                images[index].fieldname
+              );
               if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
               }
@@ -155,7 +160,11 @@ class WorkController {
           if (files) {
             for (let index = 0; index < files.length; index++) {
               work_files.push(files[index].filename);
-              const filePath = path.join(path.resolve(), "uploads", files[index].fieldname);
+              const filePath = path.join(
+                path.resolve(),
+                "uploads",
+                files[index].fieldname
+              );
               if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
               }
@@ -175,10 +184,10 @@ class WorkController {
             desc: req.body.desc,
             requirements: req.body.requirements,
             user: user._id,
-          })
-          user.works?.push(works);
+          });
+
           await user.save();
-          await works.save()
+          await works.save();
           res.status(201).json({ msg: "CREATED", data: works, error: false });
         }
       } else {

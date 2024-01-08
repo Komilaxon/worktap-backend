@@ -27,7 +27,6 @@ export interface User {
   skills: Skill;
   reviews: Array<Reviews>;
   orders: Array<Order>;
-  works: Array<Work>;
 }
 
 export const userSchema = new Schema<User>({
@@ -92,7 +91,6 @@ export const userSchema = new Schema<User>({
     type: [String],
     default: null,
   },
-  works: [{ type: Schema.Types.ObjectId, ref: "works" }],
   orders: [{ type: Schema.Types.ObjectId, ref: "orders" }],
   subcategories: { type: Schema.Types.ObjectId, ref: "sub_categories" },
   categories: { type: Schema.Types.ObjectId, ref: "categories" },
