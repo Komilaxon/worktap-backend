@@ -5,7 +5,6 @@ import { workModel } from "../models/work-model.js";
 import { userModel } from "../../user/model/user-model.js";
 import { categoryModel } from "../../categories/models/categories-model.js";
 import { subCategoryModel } from "../../subcategories/models/subcategory.model.js";
-import { skillsModel } from "../../skills/model/skills-model.js";
 import { handleNotFound } from "../../../utils/error.handler.js";
 
 class WorkController {

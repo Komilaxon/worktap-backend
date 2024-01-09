@@ -94,26 +94,27 @@ class OrderController {
         categories: findedCategory?._id,
         sub_categories: findedSubcategory._id,
       }).save();
+      res.status(201).json({ msg: "CREATED", data: orders, error: false });
 
       // If image is exist
 
-      if (req.file) {
-        const { filename }: any = req.file;
-        const filePath = path.join(path.resolve(), "uploads", filename);
+      // if (req.file) {
+      //   const { filename }: any = req.file;
+      //   const filePath = path.join(path.resolve(), "uploads", filename);
 
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-        user.orders?.push(orders);
-        await user.save();
+      //   if (fs.existsSync(filePath)) {
+      //     fs.unlinkSync(filePath);
+      //   }
+      //   user.orders?.push(orders);
+      //   await user.save();
 
-        res.status(201).json({ msg: "CREATED", data: orders, error: false });
-      } else {
-        error.message = "File information is missing";
-        error.code = 400;
-        next(error);
-        return;
-      }
+      //   res.status(201).json({ msg: "CREATED", data: orders, error: false });
+      // } else {
+      //   error.message = "File information is missing";
+      //   error.code = 400;
+      //   next(error);
+      //   return;
+      // }
     } catch (error: any) {
       error.code = 500;
       next(error);
