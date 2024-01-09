@@ -6,7 +6,7 @@ import { User } from "../../user/schema/user-schema";
 export interface Order {
   title: string;
   caption: string;
-  image: string;
+  files: [string];
   time: number;
   user?: User;
   categories?: Categories;
@@ -22,8 +22,8 @@ export const orderSchema = new Schema<Order>({
     type: String,
     required: true,
   },
-  image: {
-    type: String,
+  files: {
+    type: [String],
     required: true,
   },
   time: {

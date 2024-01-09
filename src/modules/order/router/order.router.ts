@@ -8,7 +8,6 @@ orderRouter.get("/orders", orderController.getOrder);
 
 orderRouter.post(
   "/orders/:id",
-  upload.single("image"),
+  upload.fields([{ name: "files", maxCount: 5 }]),
   orderController.createOrder
 );
-  

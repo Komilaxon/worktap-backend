@@ -5,14 +5,14 @@ import workController from "../controller/work-controller.js";
 
 export const worksRouter: Router = Router();
 
-worksRouter.get("/works", workController.getWork);
+worksRouter.get("/works/:id", workController.getWork);
 worksRouter.get("/bestworks", workController.getBestWorks);
 worksRouter.get("/works/:title", workController.getWorksByTitle);
 worksRouter.get("/works/by_sum", workController.getWorkBySum);
 
 worksRouter.post(
   "/works/:id",
-  authMiddle.checkToken,
+  // authMiddle.checkToken,
   upload.fields([
     { name: "images", maxCount: 10 },
     { name: "files", maxCount: 10 },

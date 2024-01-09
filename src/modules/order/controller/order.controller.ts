@@ -84,17 +84,40 @@ class OrderController {
       }
 
       // Create order
+      let order_files: string[] = []
+      if (Object.entries(req.files as Object).length != 0) {
+        let { files }: any = req.files;
+        if (files) {
+          for (let index = 0; index < files.length; index++) {
+            order_files.push(files[index].filename);
+            const filePath = path.join(
+              path.resolve(),
+              "uploads",
+              files[index].fieldname
+            );
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+            }
+          }
 
-      const orders = await new orderModel({
-        image: req.file?.filename,
-        title: req.body.title,
-        caption: req.body.caption,
-        time: req.body.time,
-        user: user._id,
-        categories: findedCategory?._id,
-        sub_categories: findedSubcategory._id,
-      }).save();
-      res.status(201).json({ msg: "CREATED", data: orders, error: false });
+          const orders = await new orderModel({
+            files: order_files,
+            title: req.body.title,
+            caption: req.body.caption,
+            time: req.body.time,
+            user: user._id,
+            categories: findedCategory?._id,
+            sub_categories: findedSubcategory._id,
+          }).save();
+          res.status(201).json({ msg: "CREATED", data: orders, error: false });
+        }
+      } else {
+        error.message = "File information is missing";
+        error.code = 400;
+        next(error);
+        return;
+      }
+
 
       // If image is exist
 
