@@ -21,12 +21,12 @@ declare global {
   }
 }
 
-const corsOptions = {
-  origin: "http://localhost:5173",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  optionsSuccessStatus: 204,
-};
+// const corsOptions = {
+//   origin: "http://localhost:5173",
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   credentials: true,
+//   optionsSuccessStatus: 204,
+// };
 
 export const server = async (): Promise<void> => {
   try {
@@ -36,7 +36,7 @@ export const server = async (): Promise<void> => {
     await dbConnection();
 
     // Enable cors
-    app.use(cors(corsOptions));
+    app.use(cors());
 
     // Routers
     app.use("/api", authRouter);

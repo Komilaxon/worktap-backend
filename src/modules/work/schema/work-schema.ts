@@ -19,7 +19,6 @@ export interface Work {
   desc?: string;
   questions?: [{ question: string; answer: string }];
   requirements?: string;
-  gallery?: [string];
   images: [string];
   files?: [string];
 }
