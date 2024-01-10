@@ -38,14 +38,13 @@ class AuthController {
     try {
       req.body.password = bcryptHook.hashSync(req.body.password, saltOrRounds);
 
-      const { fullname, password, email, lastname, phone, role } = req.body;
+      const { fullname, password, email, lastname, phone } = req.body;
       const user = await userModel.create({
         fullname,
         email,
         password,
         lastname,
         phone,
-        role,
       });
 
       const TOKEN = jwt.sign({ id: user._id, isAdmin: user.isAdmin });

@@ -81,7 +81,6 @@ export const userSchema = new Schema<User>({
   },
   role: {
     type: String,
-    required: true,
   },
   sertificate: {
     type: [String],

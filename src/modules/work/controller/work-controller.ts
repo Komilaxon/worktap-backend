@@ -183,7 +183,7 @@ class WorkController {
             desc: req.body.desc,
             requirements: req.body.requirements,
             user: user._id,
-            youtube_link: req.body.youtube_link
+            youtube_link: req.body.youtube_link,
           });
 
           await user.save();
