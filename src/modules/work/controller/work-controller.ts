@@ -29,7 +29,6 @@ class WorkController {
         .populate("categories")
         .populate("user")
         .exec();
-      console.log(results);
       if (endIndex < (await workModel.countDocuments().exec())) {
         results.next = {
           page: Cpage + 1,
@@ -183,7 +182,6 @@ class WorkController {
             desc: req.body.desc,
             requirements: req.body.requirements,
             user: user._id,
-            youtube_link: req.body.youtube_link,
           });
 
           await user.save();

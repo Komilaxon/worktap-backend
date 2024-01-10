@@ -21,7 +21,7 @@ export interface Work {
   requirements?: string;
   images: [string];
   files?: [string];
-  youtube_link: string
+  youtube_link: string;
 }
 
 export const workSchema = new Schema<Work>({
@@ -40,10 +40,6 @@ export const workSchema = new Schema<Work>({
   rating: {
     type: Number,
     default: 0,
-  },
-  youtube_link: {
-    type: String,
-    default: ""
   },
   user: { type: Schema.Types.ObjectId, ref: "users" },
   categories: { type: Schema.Types.ObjectId, ref: "categories" },

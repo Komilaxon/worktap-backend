@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from "fs";
 import "dotenv/config";
 import path from "path";
 import express, { Application, NextFunction, Request, Response } from "express";
@@ -22,13 +22,6 @@ declare global {
   }
 }
 
-// const corsOptions = {
-//   origin: "http://localhost:5173",
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   credentials: true,
-//   optionsSuccessStatus: 204,
-// };
-
 export const server = async (): Promise<void> => {
   try {
     const app: Application = express();
@@ -48,35 +41,33 @@ export const server = async (): Promise<void> => {
     app.use("/api", worksRouter);
     app.use("/api", reviewsRouter);
     app.use("/api", orderRouter);
-    app.use("/api/:file_name", (req, res) => {
-      const { file_name } = req.params;
-      console.log(file_name);
+    // app.use("/api/:file_name", (req, res) => {
+    //   const { file_name } = req.params;
 
-      const filePath = path.join(path.join(path.resolve(), "uploads"), `/${file_name}`);
-      const fileExtension = path.extname(filePath).toLowerCase();
-      let contentType = "application/octet-stream";
+    //   const filePath = path.join(
+    //     path.join(path.resolve(), "uploads"),
+    //     `/${file_name}`
+    //   );
+    //   const fileExtension = path.extname(filePath).toLowerCase();
+    //   let contentType = "application/octet-stream";
 
-      if (fileExtension === ".png") {
-        contentType = "image/png";
-      } else if (fileExtension === ".jpg" || fileExtension === ".jpeg") {
-        contentType = "image/jpeg";
-      } else if (fileExtension === ".webp") {
-        contentType = "image/webp";
-      }
+    //   if (fileExtension === ".png") {
+    //     contentType = "image/png";
+    //   } else if (fileExtension === ".jpg" || fileExtension === ".jpeg") {
+    //     contentType = "image/jpeg";
+    //   } else if (fileExtension === ".webp") {
+    //     contentType = "image/webp";
+    //   }
 
-      // Check if the file exists
-      fs.access(filePath, fs.constants.F_OK, (err: any) => {
-        if (err) {
-          // File not found, send a 404 response
-          res.status(404).send("File not found");
-        } else {
-          // File found, set the appropriate Content-Type and send the file
-          res.setHeader("Content-Type", contentType);
-          res.sendFile(filePath);
-        }
-      });
-    });
-
+    //   fs.access(filePath, fs.constants.F_OK, (err: any) => {
+    //     if (err) {
+    //       res.status(404).json({ msg: "File not found" });
+    //     } else {
+    //       res.setHeader("Content-Type", contentType);
+    //       res.sendFile(filePath);
+    //     }
+    //   });
+    // });
 
     // Error handling
 
