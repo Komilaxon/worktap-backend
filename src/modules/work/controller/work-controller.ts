@@ -21,15 +21,14 @@ class WorkController {
       const startIndex = (Cpage - 1) * Climit;
       const endIndex = Cpage * Climit;
 
-      const results: any = {};
-      results.results = await workModel
+      let results: any = {};
+      results = await workModel
         .find({ user: id })
         .limit(Climit)
         .skip(startIndex)
         .populate("categories")
         .populate("user")
         .exec();
-      console.log(results);
       if (endIndex < (await workModel.countDocuments().exec())) {
         results.next = {
           page: Cpage + 1,
@@ -145,7 +144,6 @@ class WorkController {
           if (images) {
             for (let index = 0; index < images.length; index++) {
               work_images.push(images[index].filename);
-
               const filePath = path.join(
                 path.resolve(),
                 "uploads",

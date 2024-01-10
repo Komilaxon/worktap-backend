@@ -50,8 +50,6 @@ export const server = async (): Promise<void> => {
     app.use("/api", orderRouter);
     app.use("/api/:file_name", (req, res) => {
       const { file_name } = req.params;
-      console.log(file_name);
-
       const filePath = path.join(path.join(path.resolve(), "uploads"), `/${file_name}`);
       const fileExtension = path.extname(filePath).toLowerCase();
       let contentType = "application/octet-stream";
@@ -63,7 +61,6 @@ export const server = async (): Promise<void> => {
       } else if (fileExtension === ".webp") {
         contentType = "image/webp";
       }
-
       // Check if the file exists
       fs.access(filePath, fs.constants.F_OK, (err: any) => {
         if (err) {
@@ -76,7 +73,6 @@ export const server = async (): Promise<void> => {
         }
       });
     });
-
 
     // Error handling
 
